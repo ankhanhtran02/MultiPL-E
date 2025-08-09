@@ -1,5 +1,8 @@
 # Multi-Programming Language Evaluation of Large Language Models of Code (MultiPL-E)
 
+**New**: For a more challenging multi-language benchmark, check out [Ag-LiveCodeBench-X](https://github.com/nuprl/Ag-LiveCodeBench-X)
+and its accompanying paper, [Agnostics](https://arxiv.org/abs/2508.04865).
+
 ## Introduction
 
 MultiPL-E is a system for translating unit test-driven neural code generation
