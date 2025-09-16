@@ -24,7 +24,7 @@ def get_arg_parser():
     parser.add_argument("--temperature", type=float, default=0.2, help="Sampling temperature")
     parser.add_argument("--top_p", type=float, default=0.95, help="Nucleus sampling top-p")
     parser.add_argument("--repetition_penalty", type=float, default=1.2, help="Repetition penalty")
-    parser.add_argument("--num_beams", type=int, default=10, help="Number of beams for beam search")
+    parser.add_argument("--num_beams", type=int, default=10, help="Number of beams for beam search. Also number of sequences to generate.")
     parser.add_argument("--generator_early_stopping", action="store_true", default=True, help="Enable generator early stopping")
     parser.add_argument("--do_test", action="store_true", default=False, help="Whether to run test evaluation")
     parser.add_argument("--epochs", type=int, default=3, help="Number of training epochs")

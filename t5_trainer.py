@@ -17,6 +17,7 @@ from t5_automodel import gen_predictions
 from types import SimpleNamespace
 import subprocess
 from pass_k import calculate_pass_k
+import platform
 
 class T5ContinualLearner:
   def __init__(self,
@@ -289,9 +290,16 @@ class T5ContinualLearner:
     gen_predictions(args, dataset_val)
 
     output_dir_path = os.path.join(self.output_dir_prefix, output_dir)
+    abs_outputs = os.path.abspath(self.output_dir_prefix)
+
+    # Normalize for Docker
+    if platform.system() == "Windows":
+        # Convert backslashes to forward slashes (Docker accepts this better)
+        abs_outputs = abs_outputs.replace("\\", "/")
+
     command = [
         "docker", "run", "--rm", "--network", "none",
-        "-v", f"./{self.output_dir_prefix}:/tutorial:rw",
+        "-v", f"{abs_outputs}:/tutorial:rw",
         "multipl-e-eval",
         "--dir", "/tutorial",
         "--output-dir", "/tutorial",
