@@ -1,36 +1,6 @@
 # Multi-Programming Language Evaluation of Large Language Models of Code (MultiPL-E)
 
-**New**: For a more challenging multi-language benchmark, check out [Ag-LiveCodeBench-X](https://github.com/nuprl/Ag-LiveCodeBench-X)
-and its accompanying paper, [Agnostics](https://arxiv.org/abs/2508.04865).
-
-## Introduction
-
-MultiPL-E is a system for translating unit test-driven neural code generation
-benchmarks to new languages. We have used MultiPL-E to translate two popular
-Python benchmarks (HumanEval and MBPP) to 18 other programming languages.
-
-For more information:
-
-- MultiPL-E is part of the [BigCode Code Generation LM Harness]. This
-  is the easiest way to use MultiPL-E.
-- The [Multilingual Code Models Evaluation] by BigCode evaluates Code LLMs
-  using several benchmarks, including MultiPL-E.
-- Read our paper [MultiPL-E: A Scalable and Polyglot Approach to Benchmarking Neural Code Generation].
-- The [MultiPL-E dataset] of translated prompts is available on the Hugging Face
-  Hub.
-
 ## Tutorial
-
-These are instructions on how to use MultiPl-E directly, without the 
-BigCode evaluation harness.
-
-In this tutorial, we will run a small experiment to evaluate the performance of
-[SantaCoder] on Rust with a small subset of the MBPP benchmarks. 
-We will only fetch 20 completions per problem, so that you
-can run it quickly on a single machine.  
-You can also run on the full suite of benchmarks or substitute your own
-benchmark programs. Later, we'll show you how to add support for other languages
-and evaluate other models.
 
 ### Prerequisites
 
