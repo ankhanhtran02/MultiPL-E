@@ -83,7 +83,7 @@ class T5ContinualLearner:
     self.epochs = epochs
     self.save_path = save_path
     self.eval_on_all_tasks = eval_on_all_tasks
-    self.output_dir_predix = output_dir_prefix
+    self.output_dir_prefix = output_dir_prefix
     self.log_every_n_steps = log_every_n_steps
     self.lora_dir_path = lora_dir_path
     self.print_outputs = print_outputs
@@ -106,9 +106,12 @@ class T5ContinualLearner:
       os.makedirs(self.lora_dir_path)
       self.logger.info(f"Created a directory for saving LoRA parameters: {self.lora_dir_path}")
 
-    if not os.path.exists(self.output_dir_predix):
-      os.makedirs(self.output_dir_predix)
-      self.logger.info(f"Created a directory for saving evaluation outputs: {self.output_dir_predix}")
+    if not os.path.exists(self.output_dir_prefix):
+      os.makedirs(self.output_dir_prefix)
+      self.logger.info(f"Created a directory for saving evaluation outputs: {self.output_dir_prefix}")
+    else:
+      clear_directory(self.output_dir_prefix)
+      self.logger.info(f"Cleared the directory for saving evaluation outputs: {self.output_dir_prefix}")
 
   def _log_hyperparams(self, exclude=None):
     if exclude is None:
@@ -270,7 +273,7 @@ class T5ContinualLearner:
     gen_args = dict(
       name=self.model_name,
       lora_path=lora_path,
-      output_dir_prefix=self.output_dir_predix,
+      output_dir_prefix=self.output_dir_prefix,
       output_dir=output_dir,
       lang=task,
       root_dataset=self.root_ds_eval,
@@ -285,11 +288,10 @@ class T5ContinualLearner:
     args = SimpleNamespace(**gen_args)
     gen_predictions(args, dataset_val)
 
-    output_dir_path = os.path.join(self.output_dir_predix, output_dir)
+    output_dir_path = os.path.join(self.output_dir_prefix, output_dir)
     command = [
         "docker", "run", "--rm", "--network", "none",
-        "-v", f".{self
-                  .output_dir_prefix}:/tutorial:rw",
+        "-v", f"./{self.output_dir_prefix}:/tutorial:rw",
         "multipl-e-eval",
         "--dir", "/tutorial",
         "--output-dir", "/tutorial",
@@ -423,7 +425,7 @@ class T5ContinualLearner:
     logger.info(f'[TRAIN] Task {task} | Total training time: {total_training_time}(s)')
 
     val_acc = []      # Used to store validation accuracy of all eval tasks
-    overall_acc = []  # Used to calculate average validation accuracy for early stopping
+    # overall_acc = []  # Used to calculate average validation accuracy for early stopping
     if self.eval_on_all_tasks:
       # eval current model/prompt on all tasks (for approaches that suffer from catastrophic forgetting)
       for eval_task in self.task_list:
@@ -439,10 +441,10 @@ class T5ContinualLearner:
 
         logger.info(result_str)
 
-        overall_acc.append(np.mean(acc))
-        if eval_task == task: # record val accuracy for the current task
-          val_acc.append(np.mean(acc))
-      acc = np.mean(overall_acc)
+        # overall_acc.append(np.mean(acc))
+        # if eval_task == task: # record val accuracy for the current task
+        val_acc.append(acc)
+      # acc = np.mean(overall_acc)
     else:
         acc, val_time = self.validate(lora_path,
                                     val_dl,
