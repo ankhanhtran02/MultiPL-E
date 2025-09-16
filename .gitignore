@@ -5,3 +5,5 @@ __pycache__
 */local_models
 cache
 scratch/
+outputs/*
+draft.py

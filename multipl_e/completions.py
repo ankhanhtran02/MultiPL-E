@@ -68,7 +68,7 @@ def partial_arg_parser():
     args.add_argument(
         "--max-tokens",
         type=int,
-        default=1024,
+        default=256,
         help="Maximum number of tokens to generate",
     )
     args.add_argument(
@@ -80,8 +80,11 @@ def partial_arg_parser():
     return args
 
 
-def make_main(args, model_name, gen_completions):
-
+def make_main(args, model_name, gen_completions, problems):
+    """
+    model_name: str, name of the model to use (no hyphens)
+    gen_completions: function that takes in a list of prompts and returns a list of
+    """
     assert "-" not in model_name, "Model name must not have hyphens"
 
     if args.output_dir is None:
@@ -102,13 +105,14 @@ def make_main(args, model_name, gen_completions):
     if not exp_dir.exists():
         exp_dir.mkdir()
 
-    if args.use_local:
-        problems = datasets.load_dataset(
-            "json", data_files=args.dataset, split="train")
-    else:
-        problems = datasets.load_dataset(
-            "nuprl/MultiPL-E", f"{args.root_dataset}-{args.lang}", revision=DATASET_REVISION, split="test"
-        )
+    # if args.use_local:
+    #     problems = datasets.load_dataset(
+    #         "json", data_files=args.dataset, split="train")
+    # else:
+    #     problems = datasets.load_dataset(
+    #         "nuprl/MultiPL-E", f"{args.root_dataset}-{args.lang}", revision=DATASET_REVISION, split="test"
+    #     )
+    #     problems = problems.select(args.idx_subset)
 
     start_index = args.input_start_index if args.input_start_index is not None else 0
     stop_index = min(
@@ -166,6 +170,8 @@ def make_main(args, model_name, gen_completions):
             max_tokens=args.max_tokens,
             temperature=args.temperature,
             top_p=args.top_p,
+            early_stopping=args.generator_early_stopping,
+            repetition_penalty=args.repetition_penalty,
             stop=stop
         )
         modified_problems = set()
