@@ -141,6 +141,7 @@ class T5ContinualLearner:
                                           split='train')
       tasks_data_dict[task]['train'] = dataloader_train
       dataloader_val, dataloader_test = ds2.get_final_ds(**data_params,
+                                                        root_ds_eval=self.root_ds_eval,
                                                         k=self.val_size,
                                                         split='test',
                                                         return_test=True)
@@ -287,13 +288,18 @@ class T5ContinualLearner:
     output_dir_path = os.path.join(self.output_dir_predix, output_dir)
     command = [
         "docker", "run", "--rm", "--network", "none",
-        "-v", f"./{output_dir_path}:/tutorial:rw",
+        "-v", f".{self
+                  .output_dir_prefix}:/tutorial:rw",
         "multipl-e-eval",
         "--dir", "/tutorial",
         "--output-dir", "/tutorial",
         "--recursive"
     ]
     result = subprocess.run(command, capture_output=True, text=True)
+    if result.returncode == 0:
+        print("Command ran successfully!")
+    else:
+        print(f"Command failed with exit code {result.returncode}")
 
     pass_k_args = SimpleNamespace(
       dirs=[f'./{output_dir_path}'],

@@ -31,7 +31,6 @@ class T5Wrapper:
         self.pad_id = self.tok.pad_token_id
         self.eos_id = self.tok.eos_token_id
         self.special_ids = set(self.tok.all_special_ids or [])
-        print(f"Pad id: {self.pad_id}, eos id: {self.eos_id}, special ids: {self.special_ids}")
  
     def _strip_left_pad(self, ids):  # bỏ pad/bos trái
         bos = self.tok.bos_token_id

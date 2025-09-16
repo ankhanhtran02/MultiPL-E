@@ -9,10 +9,10 @@ def get_arg_parser():
     parser.add_argument("--task_list", nargs="+", required=True,
                         help="List of tasks, space separated, e.g. --task_list c_sharp cpp")
     parser.add_argument("--log_filepath", type=str, required=True, help="Filepath to save logs")
-    parser.add_argument("--lora_dir_path", type=str, required=True, help="Directory to save/load LoRA adapters")
 
     # Optional arguments with defaults
-    parser.add_argument("--model_name", type=str, default="Salesforce/codet5-small", help="Model name or path")
+    parser.add_argument("--lora_dir_path", type=str, default="lora", help="Directory to save/load LoRA adapters")
+    parser.add_argument("--model_name", type=str, default="Salesforce/codet5p-220m", help="Model name or path")
     parser.add_argument("--batch_size", type=int, default=8, help="Training batch size")
     parser.add_argument("--seq_len", type=int, default=128, help="Input sequence length")
     parser.add_argument("--target_seq_len", type=int, default=256, help="Target sequence length")
@@ -49,6 +49,6 @@ def get_arg_parser():
 if __name__ == "__main__":
     parser = get_arg_parser()
     args = parser.parse_args()
-    continual_learner = T5ContinualLearner(**args)
+    continual_learner = T5ContinualLearner(**vars(args))
     continual_learner.train_continual()
     
