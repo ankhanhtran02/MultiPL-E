@@ -58,6 +58,9 @@ python main.py \
   --log_filepath logs/test.log 
 ```
 
+#### Validation function
+Running `main.py` creates an instance of `T5ContinualLearner` class from `t5_trainer.py`. Check out `validate()` method for how to build your own validation function.
+
 
 ## Credits
 

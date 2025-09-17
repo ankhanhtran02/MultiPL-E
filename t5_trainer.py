@@ -271,6 +271,7 @@ class T5ContinualLearner:
 
   def validate(self, lora_path, dataset_val, task, output_dir):
     start_time = time.time()
+    # Generate predictions
     gen_args = dict(
       name=self.model_name,
       lora_path=lora_path,
@@ -289,12 +290,11 @@ class T5ContinualLearner:
     args = SimpleNamespace(**gen_args)
     gen_predictions(args, dataset_val)
 
+    # Execute generated code 
     output_dir_path = os.path.join(self.output_dir_prefix, output_dir)
     abs_outputs = os.path.abspath(self.output_dir_prefix)
 
-    # Normalize for Docker
     if platform.system() == "Windows":
-        # Convert backslashes to forward slashes (Docker accepts this better)
         abs_outputs = abs_outputs.replace("\\", "/")
 
     command = [
@@ -311,6 +311,7 @@ class T5ContinualLearner:
     else:
         print(f"Command failed with exit code {result.returncode}")
 
+    # Calculate pass@k
     pass_k_args = SimpleNamespace(
       dirs=[f'./{output_dir_path}'],
       k=self.num_beams,
