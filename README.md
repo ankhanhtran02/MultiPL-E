@@ -30,7 +30,7 @@
 
 ### Background
 
-We first finetune the model using Trainer. After each epoch, each task and at the end of finetuning, we validate the model. Validation using MultiPL-E is a two step process:
+We first finetune the model using Trainer. After each epoch, each task and at the end of finetuning, we validate the model. Validation using MultiPL-E is a three step process:
 
 1. We *generate* completions, which requires a GPU.
 
