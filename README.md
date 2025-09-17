@@ -21,7 +21,7 @@
 4. You will need to install some Python packages:
 
     ```bash
-    pip3 install -r requirements.txt
+    pip3 install aiohttp numpy tqdm pytest datasets torch transformers peft
     ```
 
 3. You need to install [Docker].
