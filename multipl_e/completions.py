@@ -1,3 +1,4 @@
+from hmac import new
 import datasets
 import argparse
 import gzip
@@ -174,6 +175,7 @@ def make_main(args, model_name, gen_completions, problems):
             repetition_penalty=args.repetition_penalty,
             stop=stop
         )
+        # print(new_completions)
         modified_problems = set()
         for item, a_completion in zip(batch, new_completions):
             # if a_completion is just a string, run normal completion

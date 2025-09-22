@@ -31,6 +31,7 @@ class T5Wrapper:
         self.pad_id = self.tok.pad_token_id
         self.eos_id = self.tok.eos_token_id
         self.special_ids = set(self.tok.all_special_ids or [])
+        print(f"Special token ids: {self.special_ids}")
  
     def _strip_left_pad(self, ids):  # bỏ pad/bos trái
         bos = self.tok.bos_token_id
@@ -40,8 +41,11 @@ class T5Wrapper:
         return list(itertools.takewhile(lambda t: t not in self.special_ids, ids))
  
     def _decode(self, ids):
-        clean = self._stop_at_special(self._strip_left_pad(ids))
-        return self.tok.decode(clean, skip_special_tokens=False, clean_up_tokenization_spaces=False)
+        # stripped = self._strip_left_pad(ids)
+        # print(stripped)
+        # clean = self._stop_at_special(stripped)
+        # print(clean)
+        return self.tok.decode(ids, skip_special_tokens=True, clean_up_tokenization_spaces=True)
  
     def completions(self, prompts: List[str], max_tokens: int, temperature: float, top_p: float, early_stopping: bool, repetition_penalty: float, stop: List[str]):
         self.model.eval()
@@ -59,11 +63,14 @@ class T5Wrapper:
                 pad_token_id=self.pad_id,
                 eos_token_id=self.eos_id,
             )
+        # print(out)
         texts = []
         for seq in out:
             txt = self._decode(seq.tolist())
+            # print(txt)
             txt = stop_at_stop_token(txt, stop)
-            texts.append(txt)
+            print(txt)
+            # texts.append(txt)
         return texts
  
 def _name_override(args):
